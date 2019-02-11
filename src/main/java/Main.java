@@ -1,4 +1,4 @@
-import configurations.DefaultAppConfig;
+import configuration.DefaultAppConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import service.downloader.Downloader;
