@@ -1,30 +1,33 @@
-package service.downloader;
+package service.provider;
 
 import service.http.HTTPConnector;
-import model.DTO;
+import model.JsonDTO;
 import org.jetbrains.annotations.NotNull;
 import service.mapper.Mapper;
 
+
 import java.util.List;
 
-public class JsonDownloader<T extends DTO> implements Downloader<T> {
+public class HttpJsonItemProvider<T extends JsonDTO> implements ItemProvider<T> {
     private final String url;
-    private final HTTPConnector httpConnector;
-    private final Mapper mapper;
 
-    public JsonDownloader(@NotNull String url, @NotNull HTTPConnector httpConnector, @NotNull Mapper mapper) {
+    private final HTTPConnector httpConnector;
+    private final Mapper<T> jsonMapper;
+
+    public HttpJsonItemProvider(@NotNull String url, @NotNull HTTPConnector httpConnector, @NotNull Mapper<T> jsonMapper) {
         checkIsUrlEmpty(url);
         this.url = url;
         this.httpConnector = httpConnector;
-        this.mapper = mapper;
+        this.jsonMapper = jsonMapper;
     }
 
     @Override
     public List<T> getItems() {
-        String content = httpConnector.get(url);
-        System.out.println(content);
-        //TODO
-        return null;
+        return jsonMapper.fromString(getContentFromUrl());
+    }
+
+    private String getContentFromUrl(){
+        return httpConnector.getResponse(url);
     }
 
     private void checkIsUrlEmpty(String url){

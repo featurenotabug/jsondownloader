@@ -14,7 +14,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
         "title",
         "body"
 })
-public class PostDTO implements DTO {
+public class PostDTO implements JsonDTO {
 
     @JsonProperty("userId")
     public Integer userId;
@@ -24,6 +24,7 @@ public class PostDTO implements DTO {
     public String title;
     @JsonProperty("body")
     public String body;
+
 
     @Override
     public String toString() {
@@ -37,12 +38,12 @@ public class PostDTO implements DTO {
 
     @Override
     public boolean equals(Object other) {
-        if (other == this) {
+        if (other == this)
             return true;
-        }
-        if (!(other instanceof PostDTO)) {
+
+        if (!(other instanceof PostDTO))
             return false;
-        }
+
         PostDTO otherPostDTO = (PostDTO) other;
         return new EqualsBuilder().append(id, otherPostDTO.id).append(body, otherPostDTO.body).append(title, otherPostDTO.title).append(userId, otherPostDTO.userId).isEquals();
     }

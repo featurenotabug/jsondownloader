@@ -15,15 +15,19 @@ import org.springframework.stereotype.Component;
 public class DefaultHTTPConnector implements HTTPConnector {
 
     @Override
-    public String get(@NotNull String url) {
+    public String getResponse(@NotNull String url) {
         try {
-            return retrieveResponse(sendRequest(createRequest(url)));
+            return getResponseString(url);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e); //exception handling left unimplemented
         }
     }
 
-    private String retrieveResponse(@NotNull HttpResponse<String> httpResponse) throws IOException {
+    private String getResponseString(String url) throws IOException, InterruptedException {
+        return retrieveResponseBody(sendRequest(createRequest(url)));
+    }
+
+    private String retrieveResponseBody(@NotNull HttpResponse<String> httpResponse) throws IOException {
         if (isSuccessful(httpResponse.statusCode()))
             return httpResponse.body();
         else
