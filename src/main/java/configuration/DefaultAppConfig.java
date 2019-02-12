@@ -7,11 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import service.downloader.DefaultDownloader;
 import service.downloader.Downloader;
-import service.output.ConsoleWriter;
 import service.output.JsonFileWriter;
 import service.output.Writer;
-import service.provider.ItemProvider;
-import service.provider.HttpJsonProvider;
+import service.dataprovider.ItemProvider;
+import service.dataprovider.HttpJsonProvider;
 import service.http.DefaultHTTPConnector;
 import service.http.HTTPConnector;
 import service.mapper.JacksonMapper;
@@ -52,8 +51,4 @@ public class DefaultAppConfig {
         return new DefaultHTTPConnector();
     }
 
-    @Bean("consoleWriter")
-    public Writer consoleWriter() {
-        return new ConsoleWriter<>();
-    }
 }

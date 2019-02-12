@@ -1,6 +1,6 @@
 package service.downloader;
 
-import service.provider.ItemProvider;
+import service.dataprovider.ItemProvider;
 import service.output.Writer;
 
 public class DefaultDownloader<T> implements Downloader {

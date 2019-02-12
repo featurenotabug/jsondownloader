@@ -3,6 +3,8 @@ package service.output;
 import model.JsonDTO;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import service.logger.ConsoleLogger;
+import service.logger.Logger;
 import service.mapper.Mapper;
 
 import java.io.File;
@@ -30,20 +32,25 @@ public class JsonFileWriter<T extends JsonDTO> implements Writer<T> {
     private final DateFormat timestampFormatter;
     private final Mapper<T> jsonMapper;
 
+    private final Logger logger;
+
     public JsonFileWriter(@NotNull String directoryPath,  @NotNull Mapper<T> jsonMapper) {
         this.directoryPath = directoryPath;
         this.jsonMapper = jsonMapper;
         this.count = new AtomicInteger();
         this.timestampFormatter = new SimpleDateFormat(TIMESTAMP_FORMAT);
+        this.logger = new ConsoleLogger();
     }
 
     @Override
     public void writeItems(@NotNull List<T> items) {
+        verifyOutputDirectory();
         itemsToStrings(items).forEach(this::tryWriteToFile);
+        logger.log("All data has been written to files.");
     }
 
     private List<String> itemsToStrings(List<T> items){
-        return jsonMapper.stringsFrom(items);
+        return jsonMapper.stringsFromObjects(items);
     }
 
     private void tryWriteToFile(String item) {
@@ -55,8 +62,9 @@ public class JsonFileWriter<T extends JsonDTO> implements Writer<T> {
     }
 
     private void writeToFile(String item) throws IOException {
-        verifyOutputDirectory();
-        Files.writeString(getPath(), item);
+        Path path = getPathToWriteFile();
+        logger.log("Writing file:" + path.toString());
+        Files.writeString(path, item);
     }
 
     private void verifyOutputDirectory(){
@@ -70,10 +78,14 @@ public class JsonFileWriter<T extends JsonDTO> implements Writer<T> {
     }
 
     private void createOutputDirectoryIfNotExists(@NotNull File outputDir){
-        if (!outputDir.exists()) outputDir.mkdir();
+        logger.log("Checking if output directory exists:" + outputDir.getAbsolutePath());
+        if (!outputDir.exists()) {
+            outputDir.mkdir();
+            logger.log("Creating output directory");
+        }
     }
 
-    private Path getPath(){
+    private Path getPathToWriteFile(){
         return Paths.get(constructFilePath());
     }
 

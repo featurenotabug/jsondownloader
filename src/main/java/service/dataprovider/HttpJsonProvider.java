@@ -1,4 +1,4 @@
-package service.provider;
+package service.dataprovider;
 
 import service.http.HTTPConnector;
 import model.JsonDTO;
@@ -23,7 +23,7 @@ public class HttpJsonProvider<T extends JsonDTO> implements ItemProvider<T> {
 
     @Override
     public List<T> getItems() {
-        return jsonMapper.fromString(getContentFromUrl());
+        return jsonMapper.objectsFromString(getContentFromUrl());
     }
 
     private String getContentFromUrl(){
