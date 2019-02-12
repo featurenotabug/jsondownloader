@@ -33,7 +33,6 @@ public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
     @Override
     public T objectFromString(String content) {
         return (T) readValue(content, type);
-
     }
 
     @Override
@@ -47,11 +46,6 @@ public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
         } catch (IOException e) {
             throw uncheckedExceptionOf(e);
         }
-    }
-
-
-    private List<T> jsonStringToObjects(String content) throws IOException {
-        return mapper.readValue(content, collectionType);
     }
 
     private UncheckedIOException uncheckedExceptionOf(IOException e) {
