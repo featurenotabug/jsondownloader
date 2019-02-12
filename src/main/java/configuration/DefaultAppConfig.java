@@ -8,9 +8,10 @@ import org.springframework.context.annotation.PropertySource;
 import service.downloader.DefaultDownloader;
 import service.downloader.Downloader;
 import service.output.ConsoleWriter;
+import service.output.JsonFileWriter;
 import service.output.Writer;
 import service.provider.ItemProvider;
-import service.provider.HttpJsonItemProvider;
+import service.provider.HttpJsonProvider;
 import service.http.DefaultHTTPConnector;
 import service.http.HTTPConnector;
 import service.mapper.JacksonMapper;
@@ -23,14 +24,22 @@ public class DefaultAppConfig {
     @Value("${data.url}")
     private String dataSourceUrl;
 
-    @Bean("defaultDownloader")
-    public Downloader defaultDownloader() {
-        return new DefaultDownloader<>(httpPostsProvider(), fileWriter());
+    @Value("${output.dir}")
+    private String outputDirectory;
+
+    @Bean("httpPostsToFileDownloader")
+    public Downloader httpPostsToFileDownloader() {
+        return new DefaultDownloader<PostDTO>(httpPostsProvider(), fileWriter());
     }
 
     @Bean("httpPostsProvider")
     public ItemProvider httpPostsProvider() {
-        return new HttpJsonItemProvider<>(dataSourceUrl, defaultConnector(), postsMapper());
+        return new HttpJsonProvider<>(dataSourceUrl, defaultConnector(), postsMapper());
+    }
+
+    @Bean("fileWriter")
+    public Writer fileWriter() {
+        return new JsonFileWriter<>(outputDirectory, postsMapper());
     }
 
     @Bean("postsMapper")
@@ -43,13 +52,8 @@ public class DefaultAppConfig {
         return new DefaultHTTPConnector();
     }
 
-    @Bean("fileWriter")
-    public Writer fileWriter() {
-        return new ConsoleWriter(); //TODO: change to actual file writer implementation
-    }
-
     @Bean("consoleWriter")
     public Writer consoleWriter() {
-        return new ConsoleWriter();
+        return new ConsoleWriter<>();
     }
 }

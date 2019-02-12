@@ -1,7 +1,9 @@
 package service.output;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
-public interface Writer {
-    void writeItems(List<?> items);
+public interface Writer<T> {
+    void writeItems(@NotNull List<T> items);
 }

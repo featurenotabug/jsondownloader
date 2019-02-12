@@ -1,5 +1,6 @@
 package service.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import model.JsonDTO;
 import java.io.IOException;
@@ -24,14 +25,30 @@ public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
     @Override
     public List<T> fromString(String content) {
         try {
-            return stringContentToObjects(content);
+            return jsonStringToObjects(content);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw uncheckedExceptionOf(e);
         }
     }
 
-    private List<T> stringContentToObjects(String content) throws IOException {
+    private List<T> jsonStringToObjects(String content) throws IOException {
         return mapper.readValue(content, collectionType);
     }
 
+    private UncheckedIOException uncheckedExceptionOf(IOException e) {
+        return new UncheckedIOException(e);
+    }
+
+    @Override
+    public String stringFrom(T item) {
+        try {
+            return objectToJsonString(item);
+        } catch (JsonProcessingException e) {
+            throw uncheckedExceptionOf(e);
+        }
+    }
+
+    private String objectToJsonString(T item) throws JsonProcessingException {
+        return mapper.writeValueAsString(item);
+    }
 }
