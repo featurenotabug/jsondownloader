@@ -1,6 +1,6 @@
 # jsondownloader
 
-#FYI
+## FYI
 
 To run the project outside of IDE, use the jar with "-all" suffix, which includes all needed dependencies.
 
