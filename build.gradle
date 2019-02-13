@@ -55,4 +55,4 @@ task deleteJsonOutputFiles(type: Delete) {
 }
 
 clean.finalizedBy deleteJsonOutputFiles
-build.finalizedBy shadowJar
+assemble.finalizedBy shadowJar
