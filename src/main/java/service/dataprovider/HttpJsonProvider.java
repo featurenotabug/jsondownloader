@@ -23,7 +23,7 @@ public class HttpJsonProvider<T extends JsonDTO> implements ItemProvider<T> {
 
     @Override
     public List<T> getItems() {
-        return jsonMapper.objectsFromString(getContentFromUrl());
+        return jsonMapper.deserializeCollection(getContentFromUrl());
     }
 
     private String getContentFromUrl(){

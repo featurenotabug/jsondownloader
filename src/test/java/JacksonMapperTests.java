@@ -40,8 +40,8 @@ public class JacksonMapperTests {
         String expectedBody = "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto";
 
         PostDTO post = new PostDTO(expectedUserId, expectedId, expectedTitle, expectedBody);
-        String jsonPost  = jacksonMapper.stringFromObject(post);
-        PostDTO deserializedPost = jacksonMapper.objectFromString(jsonPost);
+        String jsonPost  = jacksonMapper.serialize(post);
+        PostDTO deserializedPost = jacksonMapper.deserialize(jsonPost);
 
         Assert.assertEquals(post, deserializedPost);
 
@@ -49,8 +49,8 @@ public class JacksonMapperTests {
 
     @Test
     public void verifyAllDownloadedPostsJsonSerializationAndDeserialization(){
-        List<String> serializedPosts = jacksonMapper.stringsFromObjects(items);
-        List<PostDTO> deserializedPosts = jacksonMapper.objectsFromStrings(serializedPosts);
+        List<String> serializedPosts = jacksonMapper.serialize(items);
+        List<PostDTO> deserializedPosts = jacksonMapper.deserialize(serializedPosts);
 
         Assert.assertEquals(items, deserializedPosts);
 

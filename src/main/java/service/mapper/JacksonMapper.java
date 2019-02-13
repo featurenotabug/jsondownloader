@@ -33,27 +33,27 @@ public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
     @Override
     @SuppressWarnings("unchecked")
     //value returned by ObjectMapper when type argument is constructed from Class<T>, will be of type T.
-    public T objectFromString(String content) {
-        return (T) readValue(content, type);
+    public T deserialize(String content) {
+        return (T) jsonStringToObject(content, type);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     //value returned by ObjectMapper when type argument is constructed from Class<T> and List.class, will be of type List<T>.
-    public List<T> objectsFromString(String content) {
-        return (List<T>) readValue(content, collectionType);
+    public List<T> deserializeCollection(String content) {
+        return (List<T>) jsonStringToObject(content, collectionType);
     }
 
-    private Object readValue(String content, JavaType type){
+    private Object jsonStringToObject(String content, JavaType objectType){
         try {
-            return mapper.readValue(content, type);
+            return mapper.readValue(content, objectType);
         } catch (IOException e) {
             throw uncheckedExceptionOf(e);
         }
     }
 
     @Override
-    public String stringFromObject(T item) {
+    public String serialize(T item) {
         try {
             return objectToJsonString(item);
         } catch (JsonProcessingException e) {
