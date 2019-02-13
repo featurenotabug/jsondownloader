@@ -1,5 +1,7 @@
 package service.logger;
 
+//pseudo logger interface
 public interface Logger {
-    void log(String message); //pseudo logger intraface
+    void out(String message);
+    void error(String message);
 }

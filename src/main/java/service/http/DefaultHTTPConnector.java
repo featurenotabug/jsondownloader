@@ -35,10 +35,11 @@ public class DefaultHTTPConnector implements HTTPConnector {
     }
 
     private HttpResponse<String> sendRequest(HttpRequest request) throws IOException, InterruptedException {
-        return HttpClient
-                .newBuilder()
-                .build()
-                .send(request, HttpResponse.BodyHandlers.ofString());
+        return getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private HttpClient getHttpClient(){
+        return HttpClient.newBuilder().build();
     }
 
     private HttpRequest createRequest(String url) {
@@ -50,6 +51,15 @@ public class DefaultHTTPConnector implements HTTPConnector {
     }
 
     private boolean isSuccessful(int httpResponseCode) {
-        return Response.Status.Family.familyOf(httpResponseCode).equals(Response.Status.Family.SUCCESSFUL);
+        return statusFamilyOf(httpResponseCode).equals(successfulStatusFamily()); // i.e. response code belongs to 200-299 range
     }
+
+    private Response.Status.Family statusFamilyOf(int httpResponseCode){
+        return Response.Status.Family.familyOf(httpResponseCode);
+    }
+
+    private Response.Status.Family successfulStatusFamily(){
+        return Response.Status.Family.SUCCESSFUL;
+    }
+
 }

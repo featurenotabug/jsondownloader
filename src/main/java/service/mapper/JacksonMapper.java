@@ -9,12 +9,11 @@ import java.io.UncheckedIOException;
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
+public class JacksonMapper<T extends JsonDTO> implements CollectionMapper<T> {
 
     private final ObjectMapper mapper;
     private final JavaType type;
     private final CollectionType collectionType;
-
 
     public JacksonMapper(Class<T> dtoType) {
         this.mapper = new ObjectMapper();
@@ -33,15 +32,15 @@ public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
     @Override
     @SuppressWarnings("unchecked")
     //value returned by ObjectMapper when type argument is constructed from Class<T>, will be of type T.
-    public T deserialize(String content) {
-        return (T) jsonStringToObject(content, type);
+    public T mapFromString(String item) {
+        return (T) jsonStringToObject(item, type);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     //value returned by ObjectMapper when type argument is constructed from Class<T> and List.class, will be of type List<T>.
-    public List<T> deserializeCollection(String content) {
-        return (List<T>) jsonStringToObject(content, collectionType);
+    public List<T> mapToListFromString(String items) {
+        return (List<T>) jsonStringToObject(items, collectionType);
     }
 
     private Object jsonStringToObject(String content, JavaType objectType){
@@ -53,16 +52,21 @@ public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
     }
 
     @Override
-    public String serialize(T item) {
+    public String mapToString(T item) {
+        return objectToJsonString(item);
+    }
+
+    @Override
+    public String mapToStringFromList(List<T> items) {
+        return objectToJsonString(items);
+    }
+
+    private String objectToJsonString(Object item) {
         try {
-            return objectToJsonString(item);
+            return mapper.writeValueAsString(item);
         } catch (JsonProcessingException e) {
             throw uncheckedExceptionOf(e);
         }
-    }
-
-    private String objectToJsonString(T item) throws JsonProcessingException {
-        return mapper.writeValueAsString(item);
     }
 
     private UncheckedIOException uncheckedExceptionOf(IOException e) {

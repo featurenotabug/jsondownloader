@@ -21,7 +21,9 @@ public class PostDTO implements JsonDTO {
     @JsonProperty("body")
     public String body;
 
-    public PostDTO(){}
+    public PostDTO(){
+        //for Jackson
+    }
 
     public PostDTO(Integer userId, Integer id, String title, String body) {
         this.userId = userId;

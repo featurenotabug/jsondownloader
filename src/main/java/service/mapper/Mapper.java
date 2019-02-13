@@ -4,15 +4,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public interface Mapper<T> {
-    String serialize(T item);
-    T deserialize(String content);
-    List<T> deserializeCollection(String content);
+    String mapToString(T item);
+    T mapFromString(String item);
 
-    default List<String> serialize(List<? extends T> items){
-        return items.stream().map(this::serialize).collect(Collectors.toList());
+    default List<String> mapToStringList(List<? extends T> items){
+        return items.stream().map(this::mapToString).collect(Collectors.toList());
     }
 
-    default List<T> deserialize(List<String> items){
-        return items.stream().map(this::deserialize).collect(Collectors.toList());
+    default List<T> mapFromStringList(List<String> items){
+        return items.stream().map(this::mapFromString).collect(Collectors.toList());
     }
 }

@@ -18,6 +18,6 @@ public class JsonFileWriter<T extends JsonDTO> extends AbstractFileWriter<T> {
 
     @Override
     protected List<String> itemsToStrings(@NotNull List<? extends T> items){
-        return jsonMapper.serialize(items);
+        return jsonMapper.mapToStringList(items);
     }
 }

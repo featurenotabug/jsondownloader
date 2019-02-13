@@ -1,12 +1,10 @@
 package service.output;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import service.logger.ConsoleLogger;
 import service.logger.Logger;
 import java.io.File;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,8 +23,9 @@ public abstract class AbstractFileWriter<T> implements Writer<T> {
     private final String directoryPath;
     private final AtomicInteger count;
     private final DateFormat timestampFormatter;
-
     private final Logger logger;
+
+    private Path currentFilePath;
 
     public AbstractFileWriter(@NotNull String directoryPath) {
         this.separator = "_";
@@ -38,7 +37,6 @@ public abstract class AbstractFileWriter<T> implements Writer<T> {
         this.count = new AtomicInteger();
         this.timestampFormatter = new SimpleDateFormat(timestampFormat);
         this.logger = new ConsoleLogger();
-
     }
 
     abstract protected List<String> itemsToStrings(@NotNull List<? extends T> items);
@@ -47,47 +45,54 @@ public abstract class AbstractFileWriter<T> implements Writer<T> {
     public void writeItems(@NotNull List<? extends T> items) {
         verifyOutputDirectory();
         itemsToStrings(items).forEach(this::tryWriteToFile);
-        log("All data has been written to files.");
+        logInfo("All data has been written to files.");
+    }
+    private void verifyOutputDirectory(){
+        createOutputDirectoryIfNotExists(getOutputDirectory());
+    }
+
+    private File getOutputDirectory(){
+        return new File(directoryPath);
+    }
+
+    private void createOutputDirectoryIfNotExists(@NotNull File outputDir){
+        logInfo("Checking if output directory exists:" + outputDir.getAbsolutePath());
+        if (!outputDir.exists()) {
+            outputDir.mkdir();
+            logInfo("Creating output directory");
+        }
     }
 
     private void tryWriteToFile(String item) {
         try {
             writeToFile(item);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            handleFileWriteException(e);
         }
     }
 
     private void writeToFile(String item) throws IOException {
-        Path path = getPathToWriteFile();
-        log("Writing file:" + path.toString());
-        Files.writeString(path, item);
+        setCurrentFilePath();
+        logInfo("Writing file:" + currentFilePath.toString());
+        Files.writeString(currentFilePath, item);
     }
 
-    private void verifyOutputDirectory(){
-        createOutputDirectoryIfNotExists(getOutputDirectory());
+    private void setCurrentFilePath(){
+        this.currentFilePath = getPathToWriteFile();
+    }
+
+    private void handleFileWriteException(IOException e){
+        logError("An input/output error occurred while trying to write file:" + currentFilePath.toString());
+        e.printStackTrace();
     }
 
     @NotNull
-    @Contract(" -> new")
-    private File getOutputDirectory(){
-        return new File(directoryPath);
-    }
-
-    private void createOutputDirectoryIfNotExists(@NotNull File outputDir){
-        log("Checking if output directory exists:" + outputDir.getAbsolutePath());
-        if (!outputDir.exists()) {
-            outputDir.mkdir();
-            log("Creating output directory");
-        }
-    }
-
     private Path getPathToWriteFile(){
-        return Paths.get(constructFilePath());
+        return Paths.get(constructFilePathAndIncrementCount());
     }
 
     @NotNull
-    private String constructFilePath(){
+    private String constructFilePathAndIncrementCount(){
         StringBuilder pathBuilder = new StringBuilder();
         pathBuilder.append(directoryPath)
                 .append(timestampFormatter.format(new Date()))
@@ -99,7 +104,11 @@ public abstract class AbstractFileWriter<T> implements Writer<T> {
         return pathBuilder.toString();
     }
 
-    private void log(String message){
-        logger.log(message);
+    private void logInfo(String message){
+        logger.out(message);
+    }
+
+    private void logError(String message){
+        logger.error(message);
     }
 }

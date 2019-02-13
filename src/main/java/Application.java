@@ -9,8 +9,9 @@ import service.downloader.Downloader;
 public class Application {
 
     @Autowired
-    @Qualifier("httpPostsToFileDownloader")
     //@Qualifier("genericHttpPostsDownloader")
+    //@Qualifier("httpPostsToConsoleDownloader")
+    @Qualifier("httpPostsToJsonFileDownloader")
     private Downloader downloader;
 
     private void start(){

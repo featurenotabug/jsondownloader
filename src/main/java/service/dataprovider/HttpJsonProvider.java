@@ -3,18 +3,17 @@ package service.dataprovider;
 import service.http.HTTPConnector;
 import model.JsonDTO;
 import org.jetbrains.annotations.NotNull;
-import service.mapper.Mapper;
+import service.mapper.CollectionMapper;
 
 
 import java.util.List;
 
 public class HttpJsonProvider<T extends JsonDTO> implements ItemProvider<T> {
     private final String url;
-
     private final HTTPConnector httpConnector;
-    private final Mapper<T> jsonMapper;
+    private final CollectionMapper<T> jsonMapper;
 
-    public HttpJsonProvider(@NotNull String url, @NotNull HTTPConnector httpConnector, @NotNull Mapper<T> jsonMapper) {
+    public HttpJsonProvider(@NotNull String url, @NotNull HTTPConnector httpConnector, @NotNull CollectionMapper<T> jsonMapper) {
         checkIsUrlEmpty(url);
         this.url = url;
         this.httpConnector = httpConnector;
@@ -23,15 +22,31 @@ public class HttpJsonProvider<T extends JsonDTO> implements ItemProvider<T> {
 
     @Override
     public List<T> getItems() {
-        return jsonMapper.deserializeCollection(getContentFromUrl());
+        return extractItemsFromUrl();
     }
 
-    private String getContentFromUrl(){
+    private List<T> extractItemsFromUrl(){
+        return extractItemsFromResponse(downloadContentFromUrl());
+    }
+
+    private String downloadContentFromUrl(){
         return httpConnector.getResponse(url);
     }
 
+    private List<T> extractItemsFromResponse(String response){
+        return jsonMapper.mapToListFromString(response);
+    }
+
     private void checkIsUrlEmpty(String url){
-        if(url == null || url.trim().isEmpty())
-            throw new IllegalArgumentException("Data source URL cannot be null or blank.");
+        if(urlIsEmpty(url))
+            throw emptyUrlException();
+    }
+
+    private boolean urlIsEmpty(String url){
+        return url == null || url.trim().isEmpty();
+    }
+
+    private RuntimeException emptyUrlException() {
+        return new IllegalArgumentException("Data source URL cannot be null or blank.");
     }
 }

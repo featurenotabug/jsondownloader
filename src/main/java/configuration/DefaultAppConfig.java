@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import service.downloader.DefaultDownloader;
 import service.downloader.Downloader;
+import service.mapper.CollectionMapper;
+import service.output.ConsoleWriter;
 import service.output.GenericFileWriter;
 import service.output.JsonFileWriter;
 import service.output.Writer;
@@ -27,14 +29,19 @@ public class DefaultAppConfig {
     @Value("${output.dir}")
     private String outputDirectory;
 
-    @Bean("httpPostsToFileDownloader")
-    public Downloader httpPostsToFileDownloader() {
+    @Bean("httpPostsToJsonFileDownloader")
+    public Downloader httpPostsToJsonFileDownloader() {
         return new DefaultDownloader<>(httpPostsProvider(), jsonFileWriter());
     }
 
     @Bean("genericHttpPostsDownloader")
     public Downloader genericHttpPostsDownloader() {
         return new DefaultDownloader<>(httpPostsProvider(), genericFileWriter());
+    }
+
+    @Bean("httpPostsToConsoleDownloader")
+    public Downloader httpPostsToConsoleDownloader() {
+        return new DefaultDownloader<>(httpPostsProvider(), consoleWriter());
     }
 
     @Bean("httpPostsProvider")
@@ -52,8 +59,13 @@ public class DefaultAppConfig {
         return new GenericFileWriter(outputDirectory);
     }
 
+    @Bean("consoleWriter")
+    public Writer<Object> consoleWriter() {
+        return new ConsoleWriter();
+    }
+
     @Bean("postsMapper")
-    public Mapper<PostDTO> postsMapper() {
+    public CollectionMapper<PostDTO> postsMapper() {
         return new JacksonMapper<>(PostDTO.class);
     }
 

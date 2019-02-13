@@ -1,4 +1,5 @@
 import configuration.DefaultAppConfig;
+import model.JsonDTO;
 import model.PostDTO;
 import org.junit.Assert;
 import org.junit.Before;
@@ -6,10 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import service.mapper.Mapper;
-import service.dataprovider.ItemProvider;
+import service.http.HTTPConnector;
+import service.mapper.CollectionMapper;
+import subjects.JsonPlaceholderSamplePosts;
+
 
 import java.util.List;
 
@@ -19,41 +23,53 @@ public class JacksonMapperTests {
 
     @Autowired
     @Qualifier("postsMapper")
-    Mapper<PostDTO> jacksonMapper;
+    private CollectionMapper<PostDTO> jacksonMapper;
 
     @Autowired
-    @Qualifier("httpPostsProvider")
-    ItemProvider jsonPostsProvider;
+    @Qualifier("defaultConnector")
+    private HTTPConnector httpConnector;
 
-    List items;
+    @Value("${data.url}")
+    String url;
+
+    private static String httpResponseContent;
 
     @Before
-    public void loadItems(){
-        items =  jsonPostsProvider.getItems();
+    public void initialize(){
+        if(httpResponseContent == null)
+            httpResponseContent =  httpConnector.getResponse(url);
     }
+
 
     @Test
     public void verifySinglePostJsonSerializationAndDeserialization(){
-        int expectedUserId = 1;
-        int expectedId = 1;
-        String expectedTitle = "sunt aut facere repellat provident occaecati excepturi optio reprehenderit";
-        String expectedBody = "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto";
-
-        PostDTO post = new PostDTO(expectedUserId, expectedId, expectedTitle, expectedBody);
-        String jsonPost  = jacksonMapper.serialize(post);
-        PostDTO deserializedPost = jacksonMapper.deserialize(jsonPost);
+        PostDTO post = JsonPlaceholderSamplePosts.getFirstPost();
+        String jsonPost  = jacksonMapper.mapToString(post);
+        PostDTO deserializedPost = jacksonMapper.mapFromString(jsonPost);
 
         Assert.assertEquals(post, deserializedPost);
 
     }
 
     @Test
-    public void verifyAllDownloadedPostsJsonSerializationAndDeserialization(){
-        List<String> serializedPosts = jacksonMapper.serialize(items);
-        List<PostDTO> deserializedPosts = jacksonMapper.deserialize(serializedPosts);
+    public void compareAllDownloadedPostsAfterMappingWithHttpResponseIgnoringWhitespaces(){
+        List<PostDTO> deserializedPosts = jacksonMapper.mapToListFromString(httpResponseContent);
+        String serializedPosts = jacksonMapper.mapToStringFromList(deserializedPosts);
 
-        Assert.assertEquals(items, deserializedPosts);
+        Assert.assertEquals(replaceAllWhitespaces(httpResponseContent), replaceAllWhitespaces(serializedPosts));
+    }
 
+    @Test
+    public void compareAllDownloadedPostsAfterSerializingAndDeserializingFromHttpResponse(){
+        List<PostDTO> deserializedPosts = jacksonMapper.mapToListFromString(httpResponseContent);
+        String serializedPosts = jacksonMapper.mapToStringFromList(deserializedPosts);
+        List<PostDTO> reDeserializedPosts = jacksonMapper.mapToListFromString(httpResponseContent);
+
+        Assert.assertEquals(deserializedPosts, reDeserializedPosts);
+    }
+
+    private String replaceAllWhitespaces(String withWhitespaces){
+        return withWhitespaces.replaceAll("\\s+","");
     }
 
 }
