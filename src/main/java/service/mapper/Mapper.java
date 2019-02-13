@@ -8,7 +8,7 @@ public interface Mapper<T> {
     T objectFromString(String content);
     List<T> objectsFromString(String content);
 
-    default List<String> stringsFromObjects(List<T> items){
+    default List<String> stringsFromObjects(List<? extends T> items){
         return items.stream().map(this::stringFromObject).collect(Collectors.toList());
     }
 

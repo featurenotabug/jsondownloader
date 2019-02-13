@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import service.downloader.DefaultDownloader;
 import service.downloader.Downloader;
+import service.output.GenericFileWriter;
 import service.output.JsonFileWriter;
 import service.output.Writer;
 import service.dataprovider.ItemProvider;
@@ -28,7 +29,12 @@ public class DefaultAppConfig {
 
     @Bean("httpPostsToFileDownloader")
     public Downloader httpPostsToFileDownloader() {
-        return new DefaultDownloader<>(httpPostsProvider(), fileWriter());
+        return new DefaultDownloader<>(httpPostsProvider(), jsonFileWriter());
+    }
+
+    @Bean("genericHttpPostsDownloader")
+    public Downloader genericHttpPostsDownloader() {
+        return new DefaultDownloader<>(httpPostsProvider(), genericFileWriter());
     }
 
     @Bean("httpPostsProvider")
@@ -36,9 +42,14 @@ public class DefaultAppConfig {
         return new HttpJsonProvider<>(dataSourceUrl, defaultConnector(), postsMapper());
     }
 
-    @Bean("fileWriter")
-    public Writer<PostDTO> fileWriter() {
+    @Bean("jsonFileWriter")
+    public Writer<PostDTO> jsonFileWriter() {
         return new JsonFileWriter<>(outputDirectory, postsMapper());
+    }
+
+    @Bean("genericFileWriter")
+    public Writer<Object> genericFileWriter() {
+        return new GenericFileWriter(outputDirectory);
     }
 
     @Bean("postsMapper")

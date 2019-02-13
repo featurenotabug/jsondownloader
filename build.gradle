@@ -50,7 +50,7 @@ task deleteJsonOutputFiles(type: Delete) {
     dependsOn(loadApplicationProperties)
 
     delete fileTree(applicationProperties.getProperty("output.dir")) {
-        include '**.json'
+        include '**.json', '**.txt'
     }
 }
 

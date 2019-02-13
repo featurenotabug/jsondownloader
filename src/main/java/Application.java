@@ -10,7 +10,8 @@ public class Application {
 
     @Autowired
     @Qualifier("httpPostsToFileDownloader")
-    Downloader downloader;
+    //@Qualifier("genericHttpPostsDownloader")
+    private Downloader downloader;
 
     private void start(){
         downloader.download();

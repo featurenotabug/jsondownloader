@@ -7,9 +7,9 @@ import service.output.Writer;
 public class DefaultDownloader<T> implements Downloader {
 
     private final ItemProvider<T> itemProvider;
-    private final Writer<T> outputWriter;
+    private final Writer<? super T> outputWriter;
 
-    public DefaultDownloader(@NotNull ItemProvider<T> itemProvider, @NotNull Writer<T> outputWriter) {
+    public DefaultDownloader(@NotNull ItemProvider<T> itemProvider, @NotNull Writer<? super T> outputWriter) {
         this.itemProvider = itemProvider;
         this.outputWriter = outputWriter;
     }
