@@ -28,21 +28,21 @@ public class DefaultAppConfig {
 
     @Bean("httpPostsToFileDownloader")
     public Downloader httpPostsToFileDownloader() {
-        return new DefaultDownloader<PostDTO>(httpPostsProvider(), fileWriter());
+        return new DefaultDownloader<>(httpPostsProvider(), fileWriter());
     }
 
     @Bean("httpPostsProvider")
-    public ItemProvider httpPostsProvider() {
+    public ItemProvider<PostDTO> httpPostsProvider() {
         return new HttpJsonProvider<>(dataSourceUrl, defaultConnector(), postsMapper());
     }
 
     @Bean("fileWriter")
-    public Writer fileWriter() {
+    public Writer<PostDTO> fileWriter() {
         return new JsonFileWriter<>(outputDirectory, postsMapper());
     }
 
     @Bean("postsMapper")
-    public Mapper postsMapper() {
+    public Mapper<PostDTO> postsMapper() {
         return new JacksonMapper<>(PostDTO.class);
     }
 

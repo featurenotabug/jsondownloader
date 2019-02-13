@@ -31,11 +31,15 @@ public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    //value returned by ObjectMapper when type argument is constructed from Class<T>, will be of type T.
     public T objectFromString(String content) {
         return (T) readValue(content, type);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    //value returned by ObjectMapper when type argument is constructed from Class<T> and List.class, will be of type List<T>.
     public List<T> objectsFromString(String content) {
         return (List<T>) readValue(content, collectionType);
     }
@@ -46,10 +50,6 @@ public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
         } catch (IOException e) {
             throw uncheckedExceptionOf(e);
         }
-    }
-
-    private UncheckedIOException uncheckedExceptionOf(IOException e) {
-        return new UncheckedIOException(e);
     }
 
     @Override
@@ -63,5 +63,9 @@ public class JacksonMapper<T extends JsonDTO> implements Mapper<T> {
 
     private String objectToJsonString(T item) throws JsonProcessingException {
         return mapper.writeValueAsString(item);
+    }
+
+    private UncheckedIOException uncheckedExceptionOf(IOException e) {
+        return new UncheckedIOException(e);
     }
 }

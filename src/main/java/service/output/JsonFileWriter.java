@@ -46,7 +46,7 @@ public class JsonFileWriter<T extends JsonDTO> implements Writer<T> {
     public void writeItems(@NotNull List<T> items) {
         verifyOutputDirectory();
         itemsToStrings(items).forEach(this::tryWriteToFile);
-        logger.log("All data has been written to files.");
+        log("All data has been written to files.");
     }
 
     private List<String> itemsToStrings(List<T> items){
@@ -63,7 +63,7 @@ public class JsonFileWriter<T extends JsonDTO> implements Writer<T> {
 
     private void writeToFile(String item) throws IOException {
         Path path = getPathToWriteFile();
-        logger.log("Writing file:" + path.toString());
+        log("Writing file:" + path.toString());
         Files.writeString(path, item);
     }
 
@@ -78,10 +78,10 @@ public class JsonFileWriter<T extends JsonDTO> implements Writer<T> {
     }
 
     private void createOutputDirectoryIfNotExists(@NotNull File outputDir){
-        logger.log("Checking if output directory exists:" + outputDir.getAbsolutePath());
+        log("Checking if output directory exists:" + outputDir.getAbsolutePath());
         if (!outputDir.exists()) {
             outputDir.mkdir();
-            logger.log("Creating output directory");
+            log("Creating output directory");
         }
     }
 
@@ -100,5 +100,9 @@ public class JsonFileWriter<T extends JsonDTO> implements Writer<T> {
                 .append(count.incrementAndGet())
                 .append(FILE_EXTENSION);
         return pathBuilder.toString();
+    }
+
+    private void log(String message){
+        logger.log(message);
     }
 }
