@@ -6,7 +6,7 @@ import service.logger.Logger;
 
 import java.util.List;
 
-public class ConsoleWriter implements Writer<Object> {
+public final class ConsoleWriter implements Writer<Object> {
 
     private Logger logger;
 

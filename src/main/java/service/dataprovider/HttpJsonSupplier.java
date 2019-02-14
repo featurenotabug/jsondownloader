@@ -8,7 +8,7 @@ import service.mapper.CollectionMapper;
 
 import java.util.List;
 
-public class HttpJsonSupplier<T extends JsonDTO> implements ItemSupplier<T> {
+public final class HttpJsonSupplier<T extends JsonDTO> implements ItemSupplier<T> {
     private final String url;
     private final HTTPConnector httpConnector;
     private final CollectionMapper<T> jsonMapper;

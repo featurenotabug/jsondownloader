@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class DefaultHTTPConnector implements HTTPConnector {
+public final class DefaultHTTPConnector implements HTTPConnector {
 
     @Override
     public String getResponse(@NotNull String url) {

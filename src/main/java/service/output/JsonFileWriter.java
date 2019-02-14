@@ -6,7 +6,7 @@ import service.mapper.Mapper;
 
 import java.util.List;
 
-public class JsonFileWriter<T extends JsonDTO> extends AbstractFileWriter<T> {
+public final class JsonFileWriter<T extends JsonDTO> extends AbstractFileWriter<T> {
 
     private final Mapper<T> jsonMapper;
 

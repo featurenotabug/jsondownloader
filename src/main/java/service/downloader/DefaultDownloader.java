@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import service.dataprovider.ItemSupplier;
 import service.output.Writer;
 
-public class DefaultDownloader<T> implements Downloader {
+public final class DefaultDownloader<T> implements Downloader {
 
     private final ItemSupplier<T> itemSupplier;
     private final Writer<? super T> outputWriter;

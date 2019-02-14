@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class AbstractFileWriter<T> implements Writer<T> {
+abstract class AbstractFileWriter<T> implements Writer<T> {
     protected String separator;
     protected String baseFileName;
     protected String fileExtension;

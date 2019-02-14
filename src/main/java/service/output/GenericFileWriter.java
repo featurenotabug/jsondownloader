@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GenericFileWriter extends AbstractFileWriter<Object> {
+public final class GenericFileWriter extends AbstractFileWriter<Object> {
 
     public GenericFileWriter(@NotNull String directoryPath) {
         super(directoryPath);

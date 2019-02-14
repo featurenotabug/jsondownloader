@@ -9,7 +9,7 @@ import java.io.UncheckedIOException;
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JacksonMapper<T extends JsonDTO> implements CollectionMapper<T> {
+public final class JacksonMapper<T extends JsonDTO> implements CollectionMapper<T> {
 
     private final ObjectMapper mapper;
     private final JavaType type;
