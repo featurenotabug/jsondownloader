@@ -62,7 +62,7 @@ public class JacksonMapperTests {
     public void compareAllDownloadedPostsAfterSerializingAndDeserializingFromHttpResponse(){
         List<PostDTO> deserializedPosts = jacksonMapper.mapToListFromString(httpResponseContent);
         String serializedPosts = jacksonMapper.mapToStringFromList(deserializedPosts);
-        List<PostDTO> reDeserializedPosts = jacksonMapper.mapToListFromString(httpResponseContent);
+        List<PostDTO> reDeserializedPosts = jacksonMapper.mapToListFromString(serializedPosts);
 
         Assert.assertEquals(deserializedPosts, reDeserializedPosts);
     }
