@@ -18,7 +18,6 @@ import static java.util.function.Predicate.not;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {DefaultAppConfig.class, TestAppConfig.class})
-@ComponentScan(basePackages = "test/utils")
 public class DownloaderTests {
 
     @Autowired
