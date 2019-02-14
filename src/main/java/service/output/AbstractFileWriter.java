@@ -44,7 +44,7 @@ public abstract class AbstractFileWriter<T> implements Writer<T> {
     @Override
     public void writeItems(@NotNull List<? extends T> items) {
         verifyOutputDirectory();
-        itemsToStrings(items).forEach(this::tryWriteToFile);
+        tryWritingToFiles(items);
         logInfo("All data has been written to files.");
     }
     private void verifyOutputDirectory(){
@@ -61,6 +61,10 @@ public abstract class AbstractFileWriter<T> implements Writer<T> {
             outputDir.mkdir();
             logInfo("Creating output directory");
         }
+    }
+
+    private void tryWritingToFiles(List<? extends T> items){
+        itemsToStrings(items).forEach(this::tryWriteToFile);
     }
 
     private void tryWriteToFile(String item) {

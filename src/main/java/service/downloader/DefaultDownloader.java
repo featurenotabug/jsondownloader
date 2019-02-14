@@ -1,21 +1,21 @@
 package service.downloader;
 
 import org.jetbrains.annotations.NotNull;
-import service.dataprovider.ItemProvider;
+import service.dataprovider.ItemSupplier;
 import service.output.Writer;
 
 public class DefaultDownloader<T> implements Downloader {
 
-    private final ItemProvider<T> itemProvider;
+    private final ItemSupplier<T> itemSupplier;
     private final Writer<? super T> outputWriter;
 
-    public DefaultDownloader(@NotNull ItemProvider<T> itemProvider, @NotNull Writer<? super T> outputWriter) {
-        this.itemProvider = itemProvider;
+    public DefaultDownloader(@NotNull ItemSupplier<T> itemSupplier, @NotNull Writer<? super T> outputWriter) {
+        this.itemSupplier = itemSupplier;
         this.outputWriter = outputWriter;
     }
 
     @Override
     public void download() {
-        outputWriter.writeItems(itemProvider.getItems());
+        outputWriter.writeItems(itemSupplier.getItems());
     }
 }

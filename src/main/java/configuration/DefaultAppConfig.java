@@ -12,12 +12,11 @@ import service.output.ConsoleWriter;
 import service.output.GenericFileWriter;
 import service.output.JsonFileWriter;
 import service.output.Writer;
-import service.dataprovider.ItemProvider;
-import service.dataprovider.HttpJsonProvider;
+import service.dataprovider.ItemSupplier;
+import service.dataprovider.HttpJsonSupplier;
 import service.http.DefaultHTTPConnector;
 import service.http.HTTPConnector;
 import service.mapper.JacksonMapper;
-import service.mapper.Mapper;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -45,8 +44,8 @@ public class DefaultAppConfig {
     }
 
     @Bean("httpPostsProvider")
-    public ItemProvider<PostDTO> httpPostsProvider() {
-        return new HttpJsonProvider<>(dataSourceUrl, defaultConnector(), postsMapper());
+    public ItemSupplier<PostDTO> httpPostsProvider() {
+        return new HttpJsonSupplier<>(dataSourceUrl, defaultConnector(), postsMapper());
     }
 
     @Bean("jsonFileWriter")

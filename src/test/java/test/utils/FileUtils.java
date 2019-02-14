@@ -1,0 +1,81 @@
+package test.utils;
+
+import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.UncheckedIOException;
+import java.util.List;
+import java.util.Objects;
+
+@PropertySource("classpath:application.properties")
+@Component
+public class FileUtils {
+
+    @Value("${output.dir}")
+    private String outputDirectoryPath;
+
+    public FileUtils(){
+    }
+
+    public FileUtils(String outputDirectoryPath){
+        this.outputDirectoryPath = outputDirectoryPath;
+    }
+
+    public List<File> getFilesFromDirectory(@NotNull String directoryPath){
+        File directory = new File(directoryPath);
+        errorIfDirectoryNotExists(directory);
+        return List.of(getFileArrayFromDir(directory));
+    }
+
+    public List<File> getFilesFromDefaultOutputDirectory(){
+        return getFilesFromDirectory(outputDirectoryPath);
+    }
+
+    public void cleanDirectory(@NotNull String directoryPath){
+        File directory = new File(directoryPath);
+        if(directoryExists(directory))
+            deleteFilesFromDirectory(directory);
+    }
+
+    public void cleanDefaultOutputDirectory(){
+        cleanDirectory(outputDirectoryPath);
+    }
+
+    public boolean fileHasExtension(@NotNull File file, String extension){ //pass extension without dot
+        return FilenameUtils.isExtension(file.getName(), extension);
+    }
+
+    private void deleteFilesFromDirectory(File directory){
+        for(File file: verifyFiles(directory.listFiles(), directory)){
+            if (!file.isDirectory()) file.delete();
+        }
+    }
+
+    private File[] getFileArrayFromDir(File directory){
+        File[] files = directory.listFiles();
+        return verifyFiles(files, directory);
+    }
+
+    private boolean directoryExists(File directory){
+        return directory.exists();
+    }
+
+    private void errorIfDirectoryNotExists(File directory){
+        if(!directoryExists(directory))
+            throw uncheckedDirNotFoundException(directory);
+    }
+
+    private File[] verifyFiles(File[] files, File directory){
+        return Objects.requireNonNull(files, "An error occurred while getting files from directory:" + directory.getAbsolutePath());
+    }
+
+    private RuntimeException uncheckedDirNotFoundException(File directory){
+        return new UncheckedIOException(new FileNotFoundException("Following directory does not exist:" + directory.getAbsolutePath()));
+    }
+
+}

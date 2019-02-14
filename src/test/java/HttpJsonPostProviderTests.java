@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import service.dataprovider.ItemProvider;
-import subjects.JsonPlaceholderSamplePosts;
+import service.dataprovider.ItemSupplier;
+import test.subjects.JsonPlaceholderSamplePosts;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class HttpJsonPostProviderTests {
 
     @Autowired
     @Qualifier("httpPostsProvider")
-    private ItemProvider jsonPostsProvider;
+    private ItemSupplier jsonPostsProvider;
 
     private static List<JsonDTO> items;
 

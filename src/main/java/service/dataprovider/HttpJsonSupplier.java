@@ -8,12 +8,12 @@ import service.mapper.CollectionMapper;
 
 import java.util.List;
 
-public class HttpJsonProvider<T extends JsonDTO> implements ItemProvider<T> {
+public class HttpJsonSupplier<T extends JsonDTO> implements ItemSupplier<T> {
     private final String url;
     private final HTTPConnector httpConnector;
     private final CollectionMapper<T> jsonMapper;
 
-    public HttpJsonProvider(@NotNull String url, @NotNull HTTPConnector httpConnector, @NotNull CollectionMapper<T> jsonMapper) {
+    public HttpJsonSupplier(@NotNull String url, @NotNull HTTPConnector httpConnector, @NotNull CollectionMapper<T> jsonMapper) {
         checkIsUrlEmpty(url);
         this.url = url;
         this.httpConnector = httpConnector;

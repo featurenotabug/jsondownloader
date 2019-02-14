@@ -1,4 +1,4 @@
-package subjects;
+package test.subjects;
 
 import model.PostDTO;
 

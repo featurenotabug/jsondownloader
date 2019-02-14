@@ -1,5 +1,4 @@
 import configuration.DefaultAppConfig;
-import model.JsonDTO;
 import model.PostDTO;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.http.HTTPConnector;
 import service.mapper.CollectionMapper;
-import subjects.JsonPlaceholderSamplePosts;
+import test.subjects.JsonPlaceholderSamplePosts;
 
 
 import java.util.List;
