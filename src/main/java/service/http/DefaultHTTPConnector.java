@@ -31,7 +31,11 @@ public final class DefaultHTTPConnector implements HTTPConnector {
         if (isSuccessful(httpResponse.statusCode()))
             return httpResponse.body();
         else
-            throw new IOException("Error while retrieving data via HTTP - expected response with success code (2xx), received:" + httpResponse.statusCode());
+            throw errorResponseCodeExceptionOf(httpResponse.statusCode());
+    }
+
+    private IOException errorResponseCodeExceptionOf(int statusCode){
+        return new IOException("Error while retrieving data via HTTP - expected response with success code (2xx), received:" + statusCode);
     }
 
     private HttpResponse<String> sendRequest(HttpRequest request) throws IOException, InterruptedException {

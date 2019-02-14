@@ -1,4 +1,3 @@
-import configuration.DefaultAppConfig;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,7 +15,7 @@ import java.util.List;
 import static java.util.function.Predicate.not;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DefaultAppConfig.class, TestAppConfig.class})
+@ContextConfiguration(classes = TestAppConfig.class)
 public class DownloaderTests {
 
     @Autowired
@@ -68,6 +67,7 @@ public class DownloaderTests {
         consolePostsDownloader.download();
         System.out.flush();
         System.setOut(originalSystemOut);
+        System.out.println(testOutputStream.toString());
 
         List<String> consoleMessages = List.of(testOutputStream.toString().split("model.PostDTO@"));
         long consoleMessageCount = consoleMessages.stream().filter(not(String::isBlank)).count();

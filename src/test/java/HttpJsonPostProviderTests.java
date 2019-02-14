@@ -1,4 +1,3 @@
-import configuration.DefaultAppConfig;
 import model.JsonDTO;
 import model.PostDTO;
 import org.junit.Assert;
@@ -10,19 +9,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.dataprovider.ItemSupplier;
+import test.config.TestAppConfig;
 import test.subjects.JsonPlaceholderSamplePosts;
 
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DefaultAppConfig.class)
+@ContextConfiguration(classes = TestAppConfig.class)
 public class HttpJsonPostProviderTests {
 
     @Autowired
     @Qualifier("httpPostsProvider")
-    private ItemSupplier jsonPostsProvider;
+    private ItemSupplier<? extends JsonDTO> jsonPostsProvider;
 
-    private static List<JsonDTO> items;
+    private static List<? extends JsonDTO> items;
 
     @Before
     public void initialize(){

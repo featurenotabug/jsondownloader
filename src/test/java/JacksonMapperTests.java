@@ -1,4 +1,3 @@
-import configuration.DefaultAppConfig;
 import model.PostDTO;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,13 +10,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.http.HTTPConnector;
 import service.mapper.CollectionMapper;
+import test.config.TestAppConfig;
 import test.subjects.JsonPlaceholderSamplePosts;
 
 
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DefaultAppConfig.class)
+@ContextConfiguration(classes = TestAppConfig.class)
 public class JacksonMapperTests {
 
     @Autowired

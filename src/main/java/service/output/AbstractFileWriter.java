@@ -57,17 +57,25 @@ abstract class AbstractFileWriter<T> implements Writer<T> {
 
     private void createOutputDirectoryIfNotExists(@NotNull File outputDir){
         logInfo("Checking if output directory exists:" + outputDir.getAbsolutePath());
-        if (!outputDir.exists()) {
-            outputDir.mkdir();
+        if (!directoryExists(outputDir)) {
+            createDirectory(outputDir);
             logInfo("Creating output directory");
         }
     }
 
-    private void tryWritingToFiles(List<? extends T> items){
-        itemsToStrings(items).forEach(this::tryWriteToFile);
+    private boolean directoryExists(File directory){
+        return directory.exists();
     }
 
-    private void tryWriteToFile(String item) {
+    private void createDirectory(File directory){
+        directory.mkdir();
+    }
+
+    private void tryWritingToFiles(List<? extends T> items){
+        itemsToStrings(items).forEach(this::tryWritingToFile);
+    }
+
+    private void tryWritingToFile(String item) {
         try {
             writeToFile(item);
         } catch (IOException e) {
