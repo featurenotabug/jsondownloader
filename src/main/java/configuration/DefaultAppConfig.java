@@ -65,7 +65,7 @@ public class DefaultAppConfig {
 
     @Bean("postsMapper")
     public CollectionMapper<PostDTO> postsMapper() {
-        return new JacksonMapper<>(PostDTO.class);
+        return new JacksonMapper<>(PostDTO.class, true);
     }
 
     @Bean("defaultConnector")

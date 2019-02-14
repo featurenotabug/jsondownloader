@@ -14,11 +14,17 @@ public class JacksonMapper<T extends JsonDTO> implements CollectionMapper<T> {
     private final ObjectMapper mapper;
     private final JavaType type;
     private final CollectionType collectionType;
+    private final boolean prettyPrint;
 
-    public JacksonMapper(Class<T> dtoType) {
+    public JacksonMapper(Class<T> dtoType, boolean prettyPrint) {
         this.mapper = new ObjectMapper();
         this.type = constructType(dtoType);
         this.collectionType = constructCollectionType(dtoType);
+        this.prettyPrint = prettyPrint;
+    }
+
+    public JacksonMapper(Class<T> dtoType) {
+        this(dtoType, false);
     }
 
     private CollectionType constructCollectionType(Class<T> dtoType){
@@ -63,10 +69,22 @@ public class JacksonMapper<T extends JsonDTO> implements CollectionMapper<T> {
 
     private String objectToJsonString(Object item) {
         try {
-            return mapper.writeValueAsString(item);
+            return writeValueAsString(item);
         } catch (JsonProcessingException e) {
             throw uncheckedExceptionOf(e);
         }
+    }
+
+    private String writeValueAsString(Object item) throws JsonProcessingException {
+        return prettyPrint ? writeValueAsStringWithFormatting(item) : writeValueAsStringWithoutFormatting(item);
+    }
+
+    private String writeValueAsStringWithoutFormatting(Object item) throws JsonProcessingException {
+        return mapper.writeValueAsString(item);
+    }
+
+    private String writeValueAsStringWithFormatting(Object item) throws JsonProcessingException {
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(item);
     }
 
     private UncheckedIOException uncheckedExceptionOf(IOException e) {
