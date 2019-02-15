@@ -1,3 +1,5 @@
+package test.cases;
+
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.downloader.Downloader;
 import test.config.TestAppConfig;
 import test.utils.FileUtils;
+import test.utils.SystemOutputInterceptor;
 
 import java.io.*;
 import java.util.List;
@@ -60,16 +63,9 @@ public class DownloaderTests {
 
     @Test
     public void verify100ItemsSentToConsole() {
-        ByteArrayOutputStream testOutputStream = new ByteArrayOutputStream();
-        PrintStream temporarySystemOut = new PrintStream(testOutputStream);
-        PrintStream originalSystemOut = System.out;
-        System.setOut(temporarySystemOut);
-        consolePostsDownloader.download();
-        System.out.flush();
-        System.setOut(originalSystemOut);
-        System.out.println(testOutputStream.toString());
+        String consoleOutput = SystemOutputInterceptor.captureConsoleOutAction(() -> consolePostsDownloader.download());
 
-        List<String> consoleMessages = List.of(testOutputStream.toString().split("model.PostDTO@"));
+        List<String> consoleMessages = List.of(consoleOutput.split("model.PostDTO@"));
         long consoleMessageCount = consoleMessages.stream().filter(not(String::isBlank)).count();
         long expectedMessageCount = 100;
 

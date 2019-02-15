@@ -25,8 +25,6 @@ abstract class AbstractFileWriter<T> implements Writer<T> {
     private final DateFormat timestampFormatter;
     private final Logger logger;
 
-    private Path currentFilePath;
-
     public AbstractFileWriter(@NotNull String directoryPath) {
         this.separator = "_";
         this.baseFileName = "item";
@@ -76,26 +74,22 @@ abstract class AbstractFileWriter<T> implements Writer<T> {
     }
 
     private void tryWritingToFile(String item) {
+        Path filePath = getPathToWriteFile();
         try {
-            writeToFile(item);
+            writeToFile(item, filePath);
         } catch (IOException e) {
-            handleFileWriteException(e);
+            handleFileWritingException(e, filePath);
         }
     }
 
-    private void writeToFile(String item) throws IOException {
-        setCurrentFilePath();
-        logInfo("Writing file:" + currentFilePath.toString());
-        Files.writeString(currentFilePath, item);
+    private void writeToFile(String item, Path filePath) throws IOException {
+        logInfo("Writing file:" + filePath.toString());
+        Files.writeString(filePath, item);
     }
 
-    private void setCurrentFilePath(){
-        this.currentFilePath = getPathToWriteFile();
-    }
-
-    private void handleFileWriteException(IOException e){
-        logError("An input/output error occurred while trying to write file:" + currentFilePath.toString());
-        e.printStackTrace();
+    private void handleFileWritingException(IOException e, Path filePath){
+        logError("An input/output error occurred while trying to write file:" + filePath.toString());
+        logError(e);
     }
 
     @NotNull
@@ -122,5 +116,9 @@ abstract class AbstractFileWriter<T> implements Writer<T> {
 
     private void logError(String message){
         logger.error(message);
+    }
+
+    private void logError(Exception e){
+        logger.error(e);
     }
 }

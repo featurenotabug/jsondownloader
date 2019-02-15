@@ -1,3 +1,5 @@
+package test.cases;
+
 import model.JsonDTO;
 import model.PostDTO;
 import org.junit.Assert;
@@ -16,7 +18,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestAppConfig.class)
-public class HttpJsonPostProviderTests {
+public class JsonPostProviderTests {
 
     @Autowired
     @Qualifier("httpPostsProvider")

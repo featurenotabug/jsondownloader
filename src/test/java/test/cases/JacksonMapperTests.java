@@ -1,3 +1,5 @@
+package test.cases;
+
 import model.PostDTO;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,6 +17,8 @@ import test.subjects.JsonPlaceholderSamplePosts;
 
 
 import java.util.List;
+
+import org.assertj.core.api.Assertions;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestAppConfig.class)
@@ -47,7 +51,6 @@ public class JacksonMapperTests {
         PostDTO deserializedPost = jacksonMapper.mapFromString(jsonPost);
 
         Assert.assertEquals(post, deserializedPost);
-
     }
 
     @Test
@@ -55,7 +58,7 @@ public class JacksonMapperTests {
         List<PostDTO> deserializedPosts = jacksonMapper.mapToListFromString(httpResponseContent);
         String serializedPosts = jacksonMapper.mapToStringFromList(deserializedPosts);
 
-        Assert.assertEquals(replaceAllWhitespaces(httpResponseContent), replaceAllWhitespaces(serializedPosts));
+        Assertions.assertThat(serializedPosts).isEqualToIgnoringWhitespace(httpResponseContent);
     }
 
     @Test
@@ -66,9 +69,4 @@ public class JacksonMapperTests {
 
         Assert.assertEquals(deserializedPosts, reDeserializedPosts);
     }
-
-    private String replaceAllWhitespaces(String withWhitespaces){
-        return withWhitespaces.replaceAll("\\s+","");
-    }
-
 }

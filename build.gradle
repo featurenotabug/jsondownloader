@@ -29,7 +29,9 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.springframework', name: 'spring-test', version: '5.1.4.RELEASE'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.11.1'
     testCompile group: 'commons-io', name: 'commons-io', version: '2.5'
+
 }
 
 jar {
@@ -38,7 +40,6 @@ jar {
     }
 }
 
-
 Properties applicationProperties
 
 task loadApplicationProperties {
@@ -46,8 +47,8 @@ task loadApplicationProperties {
     file("src/main/resources/application.properties").withInputStream { applicationProperties.load(it) }
 }
 
-task deleteJsonOutputFiles(type: Delete) {
-    group = "Clear"
+task deleteOutputFiles(type: Delete) {
+    group = "Cleanup"
     dependsOn(loadApplicationProperties)
 
     delete fileTree(applicationProperties.getProperty("output.dir")) {
@@ -55,5 +56,5 @@ task deleteJsonOutputFiles(type: Delete) {
     }
 }
 
-clean.finalizedBy deleteJsonOutputFiles
+clean.finalizedBy deleteOutputFiles
 assemble.finalizedBy shadowJar
