@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,6 +48,14 @@ public class FileUtils {
         cleanDirectory(outputDirectoryPath);
     }
 
+    public String getFileContent(File file){
+        try {
+            return Files.readString(file.toPath());
+        } catch (IOException e) {
+            throw uncheckedExceptionOf(e);
+        }
+    }
+
     public boolean fileHasExtension(@NotNull File file, String extension){ //pass extension without dot
         return FilenameUtils.isExtension(file.getName(), extension);
     }
@@ -66,15 +76,19 @@ public class FileUtils {
 
     private void errorIfDirectoryNotExists(File directory){
         if(!directoryExists(directory))
-            throw uncheckedDirNotFoundException(directory);
+            throw dirNotFoundException(directory);
     }
 
     private File[] verifyFiles(File[] files, File directory){
         return Objects.requireNonNull(files, "An error occurred while getting files from directory:" + directory.getAbsolutePath());
     }
 
-    private RuntimeException uncheckedDirNotFoundException(File directory){
+    private RuntimeException dirNotFoundException(File directory){
         return new UncheckedIOException(new FileNotFoundException("Following directory does not exist:" + directory.getAbsolutePath()));
+    }
+
+    private RuntimeException uncheckedExceptionOf(IOException e){
+        return new UncheckedIOException(e);
     }
 
 }
