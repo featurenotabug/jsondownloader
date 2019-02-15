@@ -5,35 +5,38 @@ import java.io.PrintStream;
 
 public class SystemOutputInterceptor {
 
-    private SystemOutputInterceptor(){}
-
     private ByteArrayOutputStream temporaryOutputStream;
     private PrintStream temporarySystemStream;
     private PrintStream originalSystemStream;
+    private final ConsoleWritingAction action;
+
+    private SystemOutputInterceptor(ConsoleWritingAction action){
+        this.action = action;
+    }
 
     public static String captureConsoleOutAction(ConsoleWritingAction action){
-        return new SystemOutputInterceptor().interceptConsoleOutActionResult(action);
+        return new SystemOutputInterceptor(action).interceptConsoleOutActionResult();
     }
 
     public static String captureConsoleErrorAction(ConsoleWritingAction action){
-        return new SystemOutputInterceptor().interceptConsoleErrorActionResult(action);
+        return new SystemOutputInterceptor(action).interceptConsoleErrorActionResult();
     }
 
-    private String interceptConsoleOutActionResult(ConsoleWritingAction action){
+    private String interceptConsoleOutActionResult(){
         startCapturingOut();
-        executeAction(action);
+        executeAction();
         stopCapturingOut();
         return getCapturedValue().trim();
     }
 
-    private String interceptConsoleErrorActionResult(ConsoleWritingAction action){
+    private String interceptConsoleErrorActionResult(){
         startCapturingError();
-        executeAction(action);
+        executeAction();
         stopCapturingError();
         return getCapturedValue().trim();
     }
 
-    private void executeAction(ConsoleWritingAction action){
+    private void executeAction(){
         action.execute();
     }
 

@@ -51,10 +51,14 @@ public final class JacksonMapper<T extends JsonDTO> implements CollectionMapper<
 
     private Object jsonStringToObject(String content, JavaType objectType){
         try {
-            return mapper.readValue(content, objectType);
+            return readFromJsonString(content, objectType);
         } catch (IOException e) {
             throw uncheckedExceptionOf(e);
         }
+    }
+
+    private Object readFromJsonString(String content, JavaType objectType) throws IOException {
+        return mapper.readValue(content, objectType);
     }
 
     @Override
@@ -76,14 +80,14 @@ public final class JacksonMapper<T extends JsonDTO> implements CollectionMapper<
     }
 
     private String writeValueAsString(Object item) throws JsonProcessingException {
-        return prettyPrint ? writeValueAsStringWithFormatting(item) : writeValueAsStringWithoutFormatting(item);
+        return prettyPrint ? writeToStringWithFormatting(item) : writeToString(item);
     }
 
-    private String writeValueAsStringWithoutFormatting(Object item) throws JsonProcessingException {
+    private String writeToString(Object item) throws JsonProcessingException {
         return mapper.writeValueAsString(item);
     }
 
-    private String writeValueAsStringWithFormatting(Object item) throws JsonProcessingException {
+    private String writeToStringWithFormatting(Object item) throws JsonProcessingException {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(item);
     }
 

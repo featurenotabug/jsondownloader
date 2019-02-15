@@ -64,8 +64,9 @@ public class DownloaderTests {
     @Test
     public void verify100ItemsSentToConsole() {
         String consoleOutput = SystemOutputInterceptor.captureConsoleOutAction(() -> consolePostsDownloader.download());
-
+        System.out.println(consoleOutput);
         List<String> consoleMessages = List.of(consoleOutput.split("model.PostDTO@"));
+
         long consoleMessageCount = consoleMessages.stream().filter(not(String::isBlank)).count();
         long expectedMessageCount = 100;
 

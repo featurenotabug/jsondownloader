@@ -110,15 +110,15 @@ abstract class AbstractFileWriter<T> implements Writer<T> {
         return pathBuilder.toString();
     }
 
-    private void logInfo(String message){
+    protected void logInfo(String message){
         logger.out(message);
     }
 
-    private void logError(String message){
+    protected void logError(String message){
         logger.error(message);
     }
 
-    private void logError(Exception e){
+    protected void logError(Exception e){
         logger.error(e);
     }
 }

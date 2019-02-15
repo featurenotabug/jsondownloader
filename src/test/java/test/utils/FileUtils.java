@@ -57,8 +57,7 @@ public class FileUtils {
     }
 
     private File[] getFileArrayFromDir(File directory){
-        File[] files = directory.listFiles();
-        return verifyFiles(files, directory);
+        return verifyFiles(directory.listFiles(), directory);
     }
 
     private boolean directoryExists(File directory){

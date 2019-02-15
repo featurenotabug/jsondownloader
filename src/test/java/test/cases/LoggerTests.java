@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.logger.ConsoleLogger;
 import service.logger.Logger;
 import test.config.TestAppConfig;
-import test.subjects.ExceptionStacktraceSamples;
+import test.subjects.ExceptionSamples;
 import test.subjects.JsonPlaceholderSamplePosts;
 import test.utils.SystemOutputInterceptor;
 
@@ -40,8 +40,8 @@ public class LoggerTests {
 
     @Test
     public void verifyExceptionProperlyLoggedToError() {
-        String expectedStackTraceString = ExceptionStacktraceSamples.SAMPLE_STACKTRACE;
-        Exception toLog = ExceptionStacktraceSamples.SAMPLE_EXCEPTION;
+        String expectedStackTraceString = ExceptionSamples.SAMPLE_STACKTRACE;
+        Exception toLog = ExceptionSamples.SAMPLE_EXCEPTION;
         String consoleOutput = SystemOutputInterceptor.captureConsoleErrorAction(() -> consoleLogger.error(toLog));
 
         Assertions.assertThat(consoleOutput).isEqualToIgnoringNewLines(expectedStackTraceString);
