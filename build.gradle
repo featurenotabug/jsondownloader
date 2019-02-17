@@ -58,3 +58,5 @@ task deleteOutputFiles(type: Delete) {
 
 clean.finalizedBy deleteOutputFiles
 assemble.finalizedBy shadowJar
+
+test.onlyIf { ! Boolean.valueOf(applicationProperties.getProperty("build.skip.tests")) }
