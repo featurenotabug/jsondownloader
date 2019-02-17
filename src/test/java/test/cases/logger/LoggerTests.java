@@ -1,4 +1,4 @@
-package test.cases;
+package test.cases.logger;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;

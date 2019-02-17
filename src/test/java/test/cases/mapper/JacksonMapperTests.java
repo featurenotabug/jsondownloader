@@ -1,4 +1,4 @@
-package test.cases;
+package test.cases.mapper;
 
 import model.PostDTO;
 import org.junit.Assert;

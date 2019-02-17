@@ -1,4 +1,4 @@
-package test.cases;
+package test.cases.downloader;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;

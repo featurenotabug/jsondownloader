@@ -1,4 +1,4 @@
-package service.dataprovider;
+package service.supplier;
 
 import service.http.HTTPConnector;
 import model.JsonDTO;

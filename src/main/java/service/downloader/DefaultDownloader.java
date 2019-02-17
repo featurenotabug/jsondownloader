@@ -1,7 +1,7 @@
 package service.downloader;
 
 import org.jetbrains.annotations.NotNull;
-import service.dataprovider.ItemSupplier;
+import service.supplier.ItemSupplier;
 import service.output.Writer;
 
 public final class DefaultDownloader<T> implements Downloader {

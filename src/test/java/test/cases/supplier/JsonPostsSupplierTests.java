@@ -1,4 +1,4 @@
-package test.cases;
+package test.cases.supplier;
 
 import model.JsonDTO;
 import model.PostDTO;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import service.dataprovider.ItemSupplier;
+import service.supplier.ItemSupplier;
 import test.config.TestAppConfig;
 import test.subjects.JsonPlaceholderSamplePosts;
 
@@ -18,18 +18,18 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestAppConfig.class)
-public class JsonPostProviderTests {
+public class JsonPostsSupplierTests {
 
     @Autowired
     @Qualifier("httpPostsProvider")
-    private ItemSupplier<? extends JsonDTO> jsonPostsProvider;
+    private ItemSupplier<? extends JsonDTO> jsonPostsSupplier;
 
     private static List<? extends JsonDTO> items;
 
     @Before
     public void initialize(){
         if(items == null)
-            items = jsonPostsProvider.getItems();
+            items = jsonPostsSupplier.getItems();
     }
 
 

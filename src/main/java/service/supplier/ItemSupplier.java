@@ -1,4 +1,4 @@
-package service.dataprovider;
+package service.supplier;
 
 import java.util.List;
 
