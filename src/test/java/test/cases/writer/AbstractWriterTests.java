@@ -44,7 +44,7 @@ abstract public class AbstractWriterTests {
         Assertions.assertThat(stringsOfItemsToWrite()).containsExactlyInAnyOrder(outputFilesContent.toArray(new String[outputFilesContent.size()]));
     }
 
-    @Test(expected  = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void verifyNullItemSourceResultsInError(){
         getWriter().writeItems(null);
     }
