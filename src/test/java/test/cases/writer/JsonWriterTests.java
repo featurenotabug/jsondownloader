@@ -32,7 +32,7 @@ public class JsonWriterTests extends AbstractWriterTests {
     }
 
     @Override
-    protected List<String> mapItemsToStrings(List<?> itemsList) {
-        return jacksonMapper.mapToStringList(itemsList);
+    protected List<String> stringsOfItemsToWrite() {
+        return jacksonMapper.mapToStringList(jsonPostsList);
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.output.Writer;
 import test.config.TestAppConfig;
-import test.subjects.JsonPlaceholderSamplePosts;
 import test.utils.FileUtils;
 
 import java.io.File;
@@ -25,6 +24,7 @@ abstract public class AbstractWriterTests {
 
     protected abstract Writer getWriter();
     protected abstract List<?> getItemsToWrite();
+    protected abstract List<String> stringsOfItemsToWrite();
 
     @Test
     public void verifyItemsFromListWrittenToFileCount(){
@@ -41,7 +41,7 @@ abstract public class AbstractWriterTests {
         getWriter().writeItems(getItemsToWrite());
         List<String> outputFilesContent = getFileContentsFromDefaultDirectory();
 
-        Assertions.assertThat(mapItemsToStrings(getItemsToWrite())).containsExactlyInAnyOrder(outputFilesContent.toArray(new String[outputFilesContent.size()]));
+        Assertions.assertThat(stringsOfItemsToWrite()).containsExactlyInAnyOrder(outputFilesContent.toArray(new String[outputFilesContent.size()]));
     }
 
     @Test(expected  = IllegalArgumentException.class)
@@ -57,8 +57,6 @@ abstract public class AbstractWriterTests {
 
         Assert.assertEquals(0, outputFiles.size());
     }
-
-    protected abstract List<String> mapItemsToStrings(List<?> itemsList);
 
     protected List<String> getFileContentsFromDefaultDirectory(){
         return fileUtils.getFilesFromDefaultOutputDirectory().stream().map(fileUtils::getFileContent).collect(Collectors.toList());

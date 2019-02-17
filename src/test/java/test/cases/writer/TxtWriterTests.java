@@ -31,7 +31,7 @@ public class TxtWriterTests extends AbstractWriterTests {
     }
 
     @Override
-    protected List<String> mapItemsToStrings(List<?> itemsList) {
-        return itemsList.stream().map(String::valueOf).collect(Collectors.toList());
+    protected List<String> stringsOfItemsToWrite() {
+        return mixedTypesList.stream().map(String::valueOf).collect(Collectors.toList());
     }
 }
